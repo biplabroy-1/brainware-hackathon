@@ -1,37 +1,26 @@
-import Navbar from "@/components/navbar";
-import Providers from "@/components/providers";
-import { Toaster } from "@/components/ui/sonner";
-import { cn } from "@/lib/utils";
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "@/styles/globals.css";
+import type React from "react"
+import type { Metadata } from "next"
+import { Inter } from "next/font/google"
+import "@/styles/globals.css"
+import { ClerkProvider } from "@clerk/nextjs"
 
-const font = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-    title: "Next.js + Clerk",
-    description: "A Next.js template with Clerk authentication.",
-};
+  title: "Routine Tracker",
+  description: "Track your daily routines and build better habits",
+}
 
 export default function RootLayout({
-    children,
+  children,
 }: Readonly<{
-    children: React.ReactNode;
+  children: React.ReactNode
 }>) {
-    return (
-        <Providers>
-            <html lang="en">
-                <body
-                    className={cn(
-                        "min-h-screen antialiased bg-background text-foreground",
-                        font.className,
-                    )}
-                >
-                    <Toaster richColors theme="light" />
-                    <Navbar />
-                    {children}
-                </body>
-            </html>
-        </Providers>
-    );
-};
+  return (
+    <ClerkProvider>
+    <html lang="en" className="dark">
+      <body className={`${inter.className} dark:bg-black dark:text-white`}>{children}</body>
+    </html>
+    </ClerkProvider>
+  )
+}
