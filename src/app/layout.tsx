@@ -1,8 +1,13 @@
+
 import type React from "react"
-import type { Metadata } from "next"
-import { Inter } from "next/font/google"
-import "@/styles/globals.css"
-import { ClerkProvider } from "@clerk/nextjs"
+import Navbar from "@/components/navbar";
+import Providers from "@/components/providers";
+import { Toaster } from "@/components/ui/sonner";
+import { cn } from "@/lib/utils";
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import "@/styles/globals.css";
+import { GoogleOneTap } from "@clerk/nextjs";
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -14,13 +19,23 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode
+  children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
-    <html lang="en" className="dark">
-      <body className={`${inter.className} dark:bg-black dark:text-white`}>{children}</body>
-    </html>
-    </ClerkProvider>
-  )
+    <Providers>
+      <html lang="en">
+        <body
+          className={cn(
+            "min-h-screen antialiased bg-background text-foreground",
+            font.className
+          )}
+        >
+          <GoogleOneTap />
+          <Toaster richColors theme="light" />
+          <Navbar />
+          {children}
+        </body>
+      </html>
+    </Providers>
+  );
 }

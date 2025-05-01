@@ -11,7 +11,6 @@ export default clerkMiddleware((auth, req) => {
     if (!isPublicRoute(req) && url.startsWith("/dashboard")) {
         auth().protect();
     }
-
 });
 
 export const config = {
