@@ -22,6 +22,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "formidable": "^3.5.4",
+    "framer-motion": "^12.9.2",
     "input-otp": "^1.2.4",
     "lucide-react": "^0.381.0",
     "mongoose": "^8.14.1",
@@ -30,6 +31,7 @@
     "react": "^18",
     "react-dom": "^18",
     "react-select": "^5.10.1",
+    "recharts": "^2.15.3",
     "sonner": "^1.5.0",
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7"

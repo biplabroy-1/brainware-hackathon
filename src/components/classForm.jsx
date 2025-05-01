@@ -204,6 +204,7 @@ const ClassForm = ({
                 <Label htmlFor={`${id}-instructor-${index}`}>Instructor:</Label>
                 <div className="flex h-10">
                   <CreatableSelect
+                    instanceId={`instructor-${day}-${index}-${id}`}
                     id={`${id}-instructor-${index}`}
                     className="w-full"
                     styles={{

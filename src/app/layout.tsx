@@ -30,7 +30,7 @@ export default function RootLayout({
         >
           <GoogleOneTap />
           <Toaster richColors theme="light" />
-          <Navbar />
+          {/* <Navbar /> */}
           {children}
         </body>
       </html>

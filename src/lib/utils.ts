@@ -1,5 +1,5 @@
 import Teacher from "@/models/Teacher";
-import { ISchedule, WeekDay } from "@/models/Schedule";
+import type { ISchedule, WeekDay } from "@/models/Schedule";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -35,6 +35,7 @@ export const extractAndSaveTeachers = async (
             const instructors = period.Instructor.split("+").map((name) =>
               name.trim()
             );
+            // biome-ignore lint/complexity/noForEach: <explanation>
             instructors.forEach((name) => teachersSet.add(name));
           }
         });

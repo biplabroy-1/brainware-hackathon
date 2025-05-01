@@ -1,6 +1,8 @@
+export const dynamic = "force-dynamic"; // 👈 add this line at the top
+
 import connectDB from "@/lib/db";
 import Teacher from "@/models/Teacher";
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
   try {
@@ -20,15 +22,14 @@ export async function GET(request: NextRequest) {
 
     if (teachers.length > 0) {
       return NextResponse.json(teachers);
-    } else {
-      return NextResponse.json(
-        {
-          message: "No teachers found with the specified criteria",
-          filters: filter,
-        },
-        { status: 404 }
-      );
     }
+    return NextResponse.json(
+      {
+        message: "No teachers found with the specified criteria",
+        filters: filter,
+      },
+      { status: 200 }
+    );
   } catch (err: any) {
     console.error("Error fetching teachers:", err);
     return NextResponse.json({ message: err.message }, { status: 500 });
