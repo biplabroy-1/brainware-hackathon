@@ -5,33 +5,35 @@ import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "@/styles/globals.css";
+import { GoogleOneTap } from "@clerk/nextjs";
 
 const font = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-    title: "Next.js + Clerk",
-    description: "A Next.js template with Clerk authentication.",
+  title: "Next.js + Clerk",
+  description: "A Next.js template with Clerk authentication.",
 };
 
 export default function RootLayout({
-    children,
+  children,
 }: Readonly<{
-    children: React.ReactNode;
+  children: React.ReactNode;
 }>) {
-    return (
-        <Providers>
-            <html lang="en">
-                <body
-                    className={cn(
-                        "min-h-screen antialiased bg-background text-foreground",
-                        font.className,
-                    )}
-                >
-                    <Toaster richColors theme="light" />
-                    <Navbar />
-                    {children}
-                </body>
-            </html>
-        </Providers>
-    );
-};
+  return (
+    <Providers>
+      <html lang="en">
+        <body
+          className={cn(
+            "min-h-screen antialiased bg-background text-foreground",
+            font.className
+          )}
+        >
+          <GoogleOneTap />
+          <Toaster richColors theme="light" />
+          <Navbar />
+          {children}
+        </body>
+      </html>
+    </Providers>
+  );
+}
