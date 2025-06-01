@@ -1,7 +1,8 @@
 import Teacher from "@/models/Teacher";
-import type { ISchedule, WeekDay } from "@/models/Schedule";
+import type { ISchedule } from "@/models/Schedule";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { WeekDay } from "@/types";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));

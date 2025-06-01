@@ -2,8 +2,9 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import ClassForm from "@/components/classForm";
 import UploadPDFModal from "@/components/upload";
+import { DayClassesContainerProps, IClass } from "@/types";
 
-const DayClassesContainer = ({
+const DayClassesContainer: React.FC<DayClassesContainerProps> = ({
   currentDay,
   schedule,
   handleAddClass,
@@ -35,7 +36,7 @@ const DayClassesContainer = ({
       </div>
 
       <div className="flex overflow-x-auto pb-4">
-        {schedule[currentDay].map((cls, index) => (
+        {(schedule[currentDay] as IClass[]).map((cls: IClass, index: number) => (
           <ClassForm
             key={index}
             cls={cls}

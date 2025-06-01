@@ -1,4 +1,3 @@
-import Navbar from "@/components/navbar";
 import Providers from "@/components/providers";
 import { Toaster } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils";
@@ -10,8 +9,8 @@ import { GoogleOneTap } from "@clerk/nextjs";
 const font = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Next.js + Clerk",
-  description: "A Next.js template with Clerk authentication.",
+  title: "Remind Me",
+  description: "A Next level app for your schedules",
 };
 
 export default function RootLayout({
@@ -30,7 +29,6 @@ export default function RootLayout({
         >
           <GoogleOneTap />
           <Toaster richColors theme="light" />
-          {/* <Navbar /> */}
           {children}
         </body>
       </html>

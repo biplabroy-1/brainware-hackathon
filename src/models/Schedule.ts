@@ -1,29 +1,6 @@
 // models/Schedule.ts
+import { IClass, WeekDay } from "@/types";
 import mongoose, { Schema, Document, Model } from "mongoose";
-
-export type ClassType = "Theory" | "Lab" | "Extra" | "Seminar" | "Free";
-export type GroupType = "Group 1" | "Group 2" | "All";
-export type WeekDay =
-  | "Monday"
-  | "Tuesday"
-  | "Wednesday"
-  | "Thursday"
-  | "Friday"
-  | "Saturday";
-
-export interface IClass {
-  Period: number;
-  Start_Time: string; // Format: HH:MM (24-hour)
-  End_Time: string;
-  Course_Name: string;
-  Instructor: string;
-  Building: string;
-  Room: string;
-  Group: GroupType;
-  Class_Duration: number;
-  Class_Count: number;
-  Class_type: ClassType;
-}
 
 export interface ISchedule extends Document {
   ID: string;
@@ -31,6 +8,7 @@ export interface ISchedule extends Document {
   program: string;
   section: string;
   university: string;
+  created_by:string;
   schedule: {
     [key in WeekDay]: IClass[];
   };
@@ -69,6 +47,7 @@ const scheduleSchema = new Schema<ISchedule>(
     program: { type: String, required: true },
     section: { type: String, required: true },
     university: { type: String, required: true },
+    created_by:{ type: String,required:true},
     schedule: {
       Monday: [classSchema],
       Tuesday: [classSchema],
