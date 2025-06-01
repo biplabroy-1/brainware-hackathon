@@ -1,11 +1,9 @@
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { GoogleAIFileManager } from "@google/generative-ai/server";
 import { createServerSentEventStream } from "@/lib/sse";
 import fs from "node:fs";
-import formidable from "formidable";
-import { Readable } from "stream";
-import { IncomingMessage } from "http";
+import { currentUser } from "@clerk/nextjs/server";
 
 export const runtime = "nodejs";
 
@@ -17,6 +15,10 @@ export async function POST(req: NextRequest) {
   const sse = createServerSentEventStream();
 
   try {
+    const user = await currentUser()
+    if (!user) {
+      return NextResponse.json({ message: "unauthorised" }, { status: 401 });
+    }
     // Create a buffer from the request body
     const buffer = await req.arrayBuffer();
     const bufferData = Buffer.from(buffer);

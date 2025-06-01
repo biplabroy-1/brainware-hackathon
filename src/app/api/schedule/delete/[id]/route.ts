@@ -1,5 +1,6 @@
 import connectDB from "@/lib/db";
 import Schedule from "@/models/Schedule";
+import { currentUser } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function DELETE(
@@ -7,6 +8,10 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
+    const user = await currentUser()
+    if (!user) {
+      return NextResponse.json({ message: "unauthorised" }, { status: 401 });
+    }
     await connectDB()
     const id = params.id;
     const result = await Schedule.deleteOne({ ID: id });

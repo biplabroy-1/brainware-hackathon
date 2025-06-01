@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useUser } from "@clerk/nextjs";
 import { Card } from "@/components/ui/card";
 import axios from "axios";
 import {
@@ -24,6 +23,7 @@ import {
   Loader2,
 } from "lucide-react";
 import Link from "next/link";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 // Define types for our data
 interface Holiday {
@@ -38,12 +38,7 @@ interface Teacher {
   university: string;
 }
 
-interface Schedule {
-  ID: string;
-}
-
 const DashboardPage = () => {
-  const { user } = useUser();
   const [holidays, setHolidays] = useState<Holiday[]>([]);
   const [teachers, setTeachers] = useState<Teacher[]>([]);
   const [schedules, setSchedules] = useState<string[]>([]);
@@ -69,8 +64,6 @@ const DashboardPage = () => {
 
         // Fetch schedules
         const schedulesRes = await axios.get("/api/schedules");
-        console.log("got here");
-
         setSchedules(schedulesRes.data.ids);
         setLoading((prev) => ({ ...prev, schedules: false }));
       } catch (error) {
@@ -115,6 +108,13 @@ const DashboardPage = () => {
   const prepareTeachersByProgram = () => {
     const programsCount: Record<string, number> = {};
 
+    // Count teachers by program
+    teachers.forEach((teacher) => {
+      if (teacher.program) {
+        programsCount[teacher.program] = (programsCount[teacher.program] || 0) + 1;
+      }
+    });
+
     return Object.keys(programsCount).map((program) => ({
       name: program,
       value: programsCount[program],
@@ -133,22 +133,19 @@ const DashboardPage = () => {
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
-      <h1 className="text-3xl font-bold text-gray-800 mb-6">
-        Analytics Dashboard
-      </h1>
 
-      {/* Welcome message with user name if available */}
-      {user && (
-        <div className="text-lg text-gray-600 mb-8">
-          Welcome back, {user.firstName || "User"}! Here&apos;s an overview of
-          your data.
-        </div>
-      )}
-      <Link href="/admin">Go to Adminpanel</Link>
+      <div className="flex justify-between items-center">
+        <h1 className="text-3xl font-bold text-gray-800 mb-6">
+          Analytics Dashboard
+        </h1>
 
+        <Link href="/admin" className="inline-block mb-8 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors duration-300 shadow-md">
+          Go to Adminpanel
+        </Link>
+      </div>
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <Card className="p-6 shadow-md">
+        <Card className="p-6 shadow-md hover:shadow-lg transition-shadow duration-300 rounded-lg border border-gray-100">
           <div className="flex items-center justify-between mb-4">
             <h2 className="font-semibold text-lg">Total Holidays</h2>
             <Calendar className="text-indigo-600" />
@@ -169,7 +166,7 @@ const DashboardPage = () => {
           )}
         </Card>
 
-        <Card className="p-6 shadow-md">
+        <Card className="p-6 shadow-md hover:shadow-lg transition-shadow duration-300 rounded-lg border border-gray-100">
           <div className="flex items-center justify-between mb-4">
             <h2 className="font-semibold text-lg">Total Teachers</h2>
             <Users className="text-blue-600" />
@@ -190,7 +187,7 @@ const DashboardPage = () => {
           )}
         </Card>
 
-        <Card className="p-6 shadow-md">
+        <Card className="p-6 shadow-md hover:shadow-lg transition-shadow duration-300 rounded-lg border border-gray-100">
           <div className="flex items-center justify-between mb-4">
             <h2 className="font-semibold text-lg">Total Schedules</h2>
             <CalendarIcon className="text-green-600" />
@@ -226,12 +223,32 @@ const DashboardPage = () => {
           ) : (
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={prepareHolidaysByMonth()}>
-                <CartesianGrid strokeDasharray="3 3" />
+                <CartesianGrid strokeDasharray="3 3" opacity={0.6} />
                 <XAxis dataKey="name" />
                 <YAxis allowDecimals={false} />
-                <Tooltip />
-                <Legend />
-                <Bar dataKey="count" fill="#8884d8" name="Holidays" />
+                <Tooltip
+                  cursor={{ fill: 'rgba(136, 132, 216, 0.1)' }}
+                  contentStyle={{
+                    borderRadius: "8px",
+                    backgroundColor: "rgba(255, 255, 255, 0.95)",
+                    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+                    border: "none",
+                    padding: "10px"
+                  }}
+                  itemStyle={{ color: "#333" }}
+                />
+                <Legend
+                  wrapperStyle={{ paddingTop: "10px" }}
+                />
+                <Bar
+                  dataKey="count"
+                  fill="#8884d8"
+                  name="Holidays"
+                  animationBegin={0}
+                  animationDuration={1500}
+                  animationEasing="ease-out"
+                  radius={[4, 4, 0, 0]}
+                />
               </BarChart>
             </ResponsiveContainer>
           )}
@@ -259,18 +276,36 @@ const DashboardPage = () => {
                   label={({ name, percent }) =>
                     `${name}: ${(percent * 100).toFixed(0)}%`
                   }
+                  animationBegin={0}
+                  animationDuration={1500}
+                  animationEasing="ease-out"
                 >
                   {prepareTeachersByProgram().map((entry, index) => (
                     <Cell
                       key={`cell-${index}`}
                       fill={COLORS[index % COLORS.length]}
+                      stroke="#fff"
+                      strokeWidth={2}
                     />
                   ))}
                 </Pie>
                 <Tooltip
                   formatter={(value) => [`${value} teachers`, "Count"]}
+                  contentStyle={{
+                    borderRadius: "8px",
+                    backgroundColor: "rgba(255, 255, 255, 0.95)",
+                    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+                    border: "none",
+                    padding: "10px"
+                  }}
+                  itemStyle={{ color: "#333" }}
                 />
-                <Legend />
+                <Legend
+                  layout="horizontal"
+                  verticalAlign="bottom"
+                  align="center"
+                  wrapperStyle={{ paddingTop: "10px" }}
+                />
               </PieChart>
             </ResponsiveContainer>
           )}
@@ -324,7 +359,7 @@ const DashboardPage = () => {
             <Loader2 className="animate-spin text-blue-600" />
           </div>
         ) : teachers.length > 0 ? (
-          <div className="overflow-x-auto">
+          <ScrollArea className="overflow-x-auto h-96">
             <table className="w-full text-left">
               <thead>
                 <tr className="bg-gray-100">
@@ -334,7 +369,7 @@ const DashboardPage = () => {
                 </tr>
               </thead>
               <tbody>
-                {teachers.slice(0, 5).map((teacher, index) => (
+                {teachers.map((teacher, index) => (
                   <tr key={index} className="border-b border-gray-200">
                     <td className="px-4 py-3">{teacher.name}</td>
                     <td className="px-4 py-3">{teacher.program}</td>
@@ -343,14 +378,7 @@ const DashboardPage = () => {
                 ))}
               </tbody>
             </table>
-            {teachers.length > 5 && (
-              <div className="text-center mt-4">
-                <span className="text-sm text-gray-500">
-                  Showing 5 of {teachers.length} teachers
-                </span>
-              </div>
-            )}
-          </div>
+          </ScrollArea>
         ) : (
           <p className="text-gray-500 py-4 text-center">No teachers found</p>
         )}

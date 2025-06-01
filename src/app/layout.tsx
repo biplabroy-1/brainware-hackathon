@@ -11,7 +11,12 @@ const font = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Remind Me",
   description: "A Next level app for your schedules",
+  icons: {
+    icon: "/logo.svg" // Make sure to add your logo image in the public folder
+  }
 };
+
+
 
 export default function RootLayout({
   children,

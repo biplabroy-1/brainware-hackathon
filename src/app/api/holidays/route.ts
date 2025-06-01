@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import Holiday from "@/models/holiday";
 import connectDB from "@/lib/db";
+import { currentUser } from "@clerk/nextjs/server";
 
 // GET all holidays
 export async function GET(request: NextRequest) {
@@ -17,6 +18,10 @@ export async function GET(request: NextRequest) {
 // POST - Add or update a holiday
 export async function POST(request: NextRequest) {
   try {
+    const user = await currentUser()
+    if (!user) {
+      return NextResponse.json({ message: "unauthorised" }, { status: 401 });
+    }
     await connectDB();
 
     const body = await request.json();

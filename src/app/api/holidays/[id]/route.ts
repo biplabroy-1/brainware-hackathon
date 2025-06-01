@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import Holiday from "@/models/holiday";
 import connectDB from "@/lib/db";
+import { currentUser } from "@clerk/nextjs/server";
 
 // DELETE a holiday by ID
 export async function DELETE(
@@ -9,6 +10,10 @@ export async function DELETE(
 ) {
   try {
     await connectDB();
+    const user = await currentUser()
+    if (!user) {
+      return NextResponse.json({ message: "unauthorised" }, { status: 401 });
+    }
 
     const id = params.id;
     console.log("Deleting holiday with ID:", id);
