@@ -8,9 +8,12 @@ export default clerkMiddleware((auth, req) => {
   /**
    * If the user is not logged in protect it from dashboard page
    */
-  //   if (!isPublicRoute(req) && url.startsWith("/dashboard")) {
-  //     auth().protect();
-  //   }
+  if (
+    (!isPublicRoute(req) && url.startsWith("/dashboard")) ||
+    url.startsWith("/admin")
+  ) {
+    auth().protect();
+  }
 });
 
 export const config = {

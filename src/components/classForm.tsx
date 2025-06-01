@@ -13,8 +13,9 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import CreatableSelect from "react-select/creatable";
 import { useId } from "react";
+import { ClassFormProps } from "@/types";
 
-const ClassForm = ({
+const ClassForm: React.FC<ClassFormProps> = ({
   cls,
   index,
   day,
@@ -71,13 +72,13 @@ const ClassForm = ({
   );
 
   return (
-    <Card className="min-w-[300px] mr-4 bg-gray-100">
-      <CardHeader className="flex justify-end p-3 pb-0">
+    <Card className="min-w-[300px] mr-4">
+      <CardHeader className="flex justify-end">
         <Button
           variant="destructive"
           size="sm"
           onClick={() => handleRemoveClass(day, index)}
-          className="h-8"
+          className="h-8 "
         >
           Remove
         </Button>
@@ -101,8 +102,7 @@ const ClassForm = ({
               Class Duration:
             </Label>
             <Select
-              className="w-full"
-              value={cls.Class_Duration.toString()}
+              value={cls.Class_Duration?.toString() || ''}
               onValueChange={(value) =>
                 handleClassChange(
                   day,
@@ -133,8 +133,7 @@ const ClassForm = ({
           <div className="grid w-full items-center gap-1.5">
             <Label htmlFor={`${id}-class-count-${index}`}>Class Count:</Label>
             <Select
-              className="w-full"
-              value={cls.Class_Count.toString()}
+              value={cls.Class_Count?.toString() || ''}
               onValueChange={(value) =>
                 handleClassChange(
                   day,
@@ -162,7 +161,6 @@ const ClassForm = ({
           <div className="grid w-full items-center gap-1.5">
             <Label htmlFor={`${id}-class-type-${index}`}>Class Type:</Label>
             <Select
-              className="w-full"
               value={cls.Class_type}
               onValueChange={(value) =>
                 handleClassChange(day, index, "Class_type", value)
@@ -204,7 +202,6 @@ const ClassForm = ({
                 <Label htmlFor={`${id}-instructor-${index}`}>Instructor:</Label>
                 <div className="flex h-10">
                   <CreatableSelect
-                    instanceId={`instructor-${day}-${index}-${id}`}
                     id={`${id}-instructor-${index}`}
                     className="w-full"
                     styles={{
@@ -222,8 +219,8 @@ const ClassForm = ({
                       handleInstructorChange(day, index, newValue)
                     }
                     options={instructors.map((instructor) => ({
-                      value: instructor.name,
-                      label: `${instructor.name}`,
+                      value: instructor.value,
+                      label: `${instructor.label}`,
                     }))}
                     formatCreateLabel={(inputValue) => `Add "${inputValue}"`}
                     isClearable
@@ -263,7 +260,6 @@ const ClassForm = ({
           <div className="grid w-full items-center gap-1.5">
             <Label htmlFor={`${id}-group-${index}`}>Group:</Label>
             <Select
-              className="w-full"
               value={cls.Group}
               onValueChange={(value) =>
                 handleClassChange(day, index, "Group", value)

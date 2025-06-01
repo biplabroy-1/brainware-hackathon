@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, ChangeEvent } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -7,18 +7,35 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Progress } from "@/components/ui/progress";
-import { toast } from "sonner";
+import toast from "react-hot-toast";
 
-export default function UploadPDFModal({ onUploadSuccess }) {
-  const [open, setOpen] = useState(false);
-  const [file, setFile] = useState(null);
-  const [uploading, setUploading] = useState(false);
-  const [progress, setProgress] = useState(0);
-  const [statusMessage, setStatusMessage] = useState("");
-  const eventSourceRef = useRef(null);
+interface UploadPDFModalProps {
+  onUploadSuccess: (data: any) => void;
+}
 
-  const handleFileChange = (event) => {
-    const uploadedFile = event.target.files[0];
+interface EventData {
+  message?: string;
+  status?: string;
+  progress?: number;
+  type?: string;
+  data?: {
+    status?: string;
+    message?: string;
+    type?: string;
+    [key: string]: any;
+  } | null;
+}
+
+export default function UploadPDFModal({ onUploadSuccess }: UploadPDFModalProps) {
+  const [open, setOpen] = useState<boolean>(false);
+  const [file, setFile] = useState<File | null>(null);
+  const [uploading, setUploading] = useState<boolean>(false);
+  const [progress, setProgress] = useState<number>(0);
+  const [statusMessage, setStatusMessage] = useState<string>("");
+  const eventSourceRef = useRef<EventSource | null>(null);
+
+  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const uploadedFile = event.target.files?.[0] || null;
     setFile(uploadedFile);
   };
 
@@ -46,7 +63,10 @@ export default function UploadPDFModal({ onUploadSuccess }) {
         throw new Error(`Server responded with ${response.status}`);
       }
 
-      const reader = response.body.getReader();
+      const reader = response.body ? response.body.getReader() : null;
+      if (!reader) {
+        throw new Error('Response body is null');
+      }
       const decoder = new TextDecoder();
       let buffer = "";
 
@@ -76,45 +96,45 @@ export default function UploadPDFModal({ onUploadSuccess }) {
     }
   };
 
-  const handleEventData = (data) => {
+  const handleEventData = (data: EventData) => {
     console.log("Received update:", data);
 
     if (data.message) {
       setStatusMessage(data.message);
       console.log(data.message);
-      
+
       let newProgress = progress;
       switch (data.status) {
         case "uploading":
-          newProgress = data.progress;
+          newProgress = data.progress || progress;
           break;
         case "uploaded":
-          newProgress = data.progress;
+          newProgress = data.progress || progress;
           break;
         case "processing":
-          newProgress = data.progress;
+          newProgress = data.progress || progress;
           break;
         case "processed":
-          newProgress = data.progress;
+          newProgress = data.progress || progress;
           break;
         case "analyzing":
-          newProgress = data.progress;
+          newProgress = data.progress || progress;
           break;
         case "extracting":
-          newProgress = data.progress;
+          newProgress = data.progress || progress;
           break;
         case "finalizing":
-          newProgress = data.progress;
+          newProgress = data.progress || progress;
           break;
         case "extracted":
-          newProgress = data.progress;
+          newProgress = data.progress || progress;
           break;
         case "complete":
           newProgress = 100;
-          if (data.status === "complete"){
+          if (data.status === "complete") {
             toast.success(data.message);
-          }else{
-            toast.error(data.message.substring(0, 30)); 
+          } else {
+            toast.error(data.message.substring(0, 30));
           }
           break;
         default:
@@ -126,7 +146,7 @@ export default function UploadPDFModal({ onUploadSuccess }) {
 
     if (data.status === "complete") {
       console.log("This is the data", data);
-      
+
       // Check if the data contains a non-timetable message
       if (data.type === "text" && typeof data.data === 'string') {
         console.log("Received non-timetable data");
@@ -139,14 +159,14 @@ export default function UploadPDFModal({ onUploadSuccess }) {
         return; // Exit early without calling onUploadSuccess
       }
 
-      if (data.data.status === "error" || data.data.type === "text") {
+      if (data.data && (data.data.status === "error" || data.data.type === "text")) {
         console.log("error");
-        toast.error(data.data.message);
+        toast.error(data.data.message || "Unknown error");
         setUploading(false);
       } else if (onUploadSuccess && data.data) {
         onUploadSuccess(data.data);
       }
-      
+
       setTimeout(() => {
         setUploading(false);
         setOpen(false);

@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Dialog,
   DialogContent,
@@ -7,7 +8,14 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 
-const Modal = ({ isOpen, onClose, onConfirm, message }) => {
+interface ModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onConfirm: () => void;
+  message: string;
+}
+
+const Modal: React.FC<ModalProps> = ({ isOpen, onClose, onConfirm, message }) => {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent>

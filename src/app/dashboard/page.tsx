@@ -23,6 +23,7 @@ import {
   Calendar as CalendarIcon,
   Loader2,
 } from "lucide-react";
+import Link from "next/link";
 
 // Define types for our data
 interface Holiday {
@@ -113,7 +114,7 @@ const DashboardPage = () => {
 
   const prepareTeachersByProgram = () => {
     const programsCount: Record<string, number> = {};
-    
+
     return Object.keys(programsCount).map((program) => ({
       name: program,
       value: programsCount[program],
@@ -139,10 +140,11 @@ const DashboardPage = () => {
       {/* Welcome message with user name if available */}
       {user && (
         <div className="text-lg text-gray-600 mb-8">
-          Welcome back, {user.firstName || "User"}! Here&apos;s an overview of your
-          data.
+          Welcome back, {user.firstName || "User"}! Here&apos;s an overview of
+          your data.
         </div>
       )}
+      <Link href="/admin">Go to Adminpanel</Link>
 
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
