@@ -63,7 +63,7 @@ const DashboardPage = () => {
         setLoading((prev) => ({ ...prev, teachers: false }));
 
         // Fetch schedules
-        const schedulesRes = await axios.get("/api/schedules");
+        const schedulesRes = await axios.get("/api/schedule/ids");
         setSchedules(schedulesRes.data.ids);
         setLoading((prev) => ({ ...prev, schedules: false }));
       } catch (error) {
